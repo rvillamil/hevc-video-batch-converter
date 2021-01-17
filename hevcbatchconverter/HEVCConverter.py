@@ -68,25 +68,37 @@ class HEVCConverter:
         #print("timestamp =", ts)
         return ts
 
-
-    #def from subprocess import call
-    def change_creation_date_on_macos(self, filepath, new_creation_datetime):
-        from subprocess import call
-        command = 'SetFile -d ' + new_creation_datetime + ' ' + filepath
-        call(command, shell=True)
-
     def datetime_str_to_datetime(self, my_date_time_str):
         my_datetime_object=ciso8601.parse_datetime(my_date_time_str)
         return my_datetime_object.strftime("%m/%d/%Y %H:%M:%S")
 
-    def convert_file (self,file, creation_date_str):
+
+    def change_creation_date_on_macos(self, dirname, filename, new_creation_datetime):
+        from subprocess import call
+        full_path_file =dirname+ os.sep + filename
+        print ("Modificando la fecha de cracion del fichero '%s'" % full_path_file)
+        command = 'SetFile -d "' + new_creation_datetime + '" "' + full_path_file + '"'
+        print ("Corriendo comando '%s'" % command)
+        call(command, shell=True)
+
+    def ffmep_convert_file(self, dirname, input_filename):
+        from subprocess import call
+        output_filename = input_filename.replace('.avi','.mp4')
+        full_path_imputfile = dirname + os.sep + input_filename
+        full_path_outputfile = dirname + os.sep + output_filename
+        # ffmpeg -i input.avi -c:v libx265 -crf 28 -c:a aac -b:a 128k -tag:v hvc1 output.mp4
+        command = "ffmpeg -i '{full_path_imputfile}' -c:v libx265 -crf 28 -c:a aac -b:a 128k -tag:v hvc1 '{full_path_outputfile}'".format(full_path_imputfile=full_path_imputfile, full_path_outputfile=full_path_outputfile)
+        print ("FFMPEG: Corriendo comando '%s'" % command)
+        call(command, shell=True)
+
+
+    def process_file (self,dir, file, creation_date_str):
         print ("Convirtiendo fichero '{file}' y estableciendo '{creation_date_str}' como fecha de creacion".format(file=file,creation_date_str=creation_date_str))
         new_creation_datetime=self.datetime_str_to_datetime (creation_date_str)
         print ("New Date time %s" % new_creation_datetime)
-
         # Set fecha de creacion
-        self.change_creation_date_on_macos (file, new_creation_datetime)
-        
+        self.ffmep_convert_file(dir,file)
+        self.change_creation_date_on_macos (dir, file, new_creation_datetime)  
         
     def convert_dir (self, dir):
         os.chdir(dir)
@@ -94,4 +106,4 @@ class HEVCConverter:
             print ("------------------------------------")
             creation_date_str = self.extract_creation_date_from_xmp_file (file)
             filename, extension = os.path.splitext(file) 
-            self.convert_file(filename + "." + self.VIDEO_EXTENSION, creation_date_str)
+            self.process_file(dir, filename + "." + self.VIDEO_EXTENSION, creation_date_str)
