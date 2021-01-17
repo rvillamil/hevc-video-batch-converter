@@ -82,14 +82,16 @@ class HEVCConverter:
         call(command, shell=True)
 
     def ffmep_convert_file(self, dirname, input_filename):
+        # See: https://aaron.cc/ffmpeg-hevc-apple-devices/
         from subprocess import call
         output_filename = input_filename.replace('.avi','.mp4')
         full_path_imputfile = dirname + os.sep + input_filename
         full_path_outputfile = dirname + os.sep + output_filename
         # ffmpeg -i input.avi -c:v libx265 -crf 28 -c:a aac -b:a 128k -tag:v hvc1 output.mp4
-        command = "ffmpeg -i '{full_path_imputfile}' -c:v libx265 -crf 28 -c:a aac -b:a 128k -tag:v hvc1 '{full_path_outputfile}'".format(full_path_imputfile=full_path_imputfile, full_path_outputfile=full_path_outputfile)
+        command = "ffmpeg -i '{full_path_imputfile}' -c:v libx265 -crf 0 -c:a aac -b:a 128k -tag:v hvc1 '{full_path_outputfile}'".format(full_path_imputfile=full_path_imputfile, full_path_outputfile=full_path_outputfile)
         print ("FFMPEG: Corriendo comando '%s'" % command)
         call(command, shell=True)
+        return output_filename
 
 
     def process_file (self,dir, file, creation_date_str):
@@ -97,8 +99,8 @@ class HEVCConverter:
         new_creation_datetime=self.datetime_str_to_datetime (creation_date_str)
         print ("New Date time %s" % new_creation_datetime)
         # Set fecha de creacion
-        self.ffmep_convert_file(dir,file)
-        self.change_creation_date_on_macos (dir, file, new_creation_datetime)  
+        output_filename = self.ffmep_convert_file(dir,file)
+        self.change_creation_date_on_macos (dir, output_filename, new_creation_datetime)  
         
     def convert_dir (self, dir):
         os.chdir(dir)
