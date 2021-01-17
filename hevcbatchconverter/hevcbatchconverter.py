@@ -5,7 +5,11 @@
 import logging
 import sys
 import argparse
-#from .__version__ import __version__
+from .__version__ import __version__
+
+# Import my libraries
+from .HEVCConverter import HEVCConverter
+
 
 # Metadata
 __author__ = "Rodrigo Villamil Pérez"
@@ -41,7 +45,7 @@ def parse_args(args):
     parser.add_argument(
         "--version",
         action="version",
-        #version="hevcbatchconverter {ver}".format(ver=__version__),
+        version="hevcbatchconverter {ver}".format(ver=__version__),
     )
     parser.add_argument(
         "-v",
@@ -63,7 +67,7 @@ def parse_args(args):
     parser.add_argument(
         '-p',
         '--path',
-        help='Download path',
+        help='Download path',        
         required=True
     )
 
@@ -93,10 +97,12 @@ def main(args):
     """
     args = parse_args(args)
     setup_logging(args.loglevel)
-    _logger.debug("Begin ...")
-
-    print ("Hola")
-
+    _logger.debug("Begin ...")   
+    hevcconverter = HEVCConverter()
+    print ("Se van a convertir todos estos ficheros...\n")
+    hevcconverter.print_all_convertible_files_in_dir(args.path)    
+    input("Pulse Enter para continuar o Ctrl-C para abortar...")
+    hevcconverter.convert_dir(args.path)
     _logger.info("Script ends here")
 
 

@@ -22,7 +22,7 @@ VERSION = None  # Ver fichero __version.py__
 
 # What packages are required for this module to be executed?
 # Example: REQUIRED = ["gitpython", "python-gitlab"]
-REQUIRED = []
+REQUIRED = ["ciso8601"]
 
 # What packages are optional?
 EXTRAS = {
