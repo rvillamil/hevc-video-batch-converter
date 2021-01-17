@@ -25,9 +25,6 @@ class HEVCConverter:
     VIDEO_EXTENSION = "avi"
     XML_NODE_REGEX = r"photoshop:DateCreated>(.*)</photoshop:DateCreated"
     
-    def print_files(self):
-        print ("Printing..")
-    
     def print_all_convertible_files_in_dir(self, dir):
         os.chdir(dir)
         for file in glob.glob("*."+ self.XMP_EXTENSION):
@@ -45,6 +42,11 @@ class HEVCConverter:
                 _logger.debug ("Group {groupNum} found at {start}-{end}: {group}".format(groupNum = groupNum, start = match.start(groupNum), end = match.end(groupNum), group = match.group(groupNum)))
                 creation_date=match.group(groupNum)
         return creation_date
+
+    def datetime_str_to_datetime(self, my_date_time_str):
+        my_datetime_object=ciso8601.parse_datetime(my_date_time_str)
+        return my_datetime_object.strftime("%m/%d/%Y %H:%M:%S")
+
 
     def change_creation_date_on_macos(self, dirname, filename, new_creation_datetime):
         from subprocess import call
