@@ -46,33 +46,6 @@ class HEVCConverter:
                 creation_date=match.group(groupNum)
         return creation_date
 
-
-    def timestamp_to_datetime(self,ts):
-        """ Example:
-            For ts '1072362918.0' then returns datetime '2003-12-25T15:35:18+01:00'
-        """
-        TIME_FORMAT='%Y-%m-%d %H:%M:%S'
-        dt = datetime.utcfromtimestamp(ts).strftime(TIME_FORMAT)
-        print("Time as string : %s" % dt)        
-        return dt
-
-    def datetime_str_to_timestamp(self,my_date_time_str):
-        """ Example:
-            For my_date_time_str '2003-12-25T15:35:18+01:00' then returns timestamp '1072362918.0'
-        """
-        print ("Transformando la fecha de creacion: "+ my_date_time_str)
-        my_datetime_object=ciso8601.parse_datetime(my_date_time_str)
-        #print ("CISO" , my_datetime_object)
-        ts = int(datetime.timestamp(my_datetime_object))
-        
-        #print("timestamp =", ts)
-        return ts
-
-    def datetime_str_to_datetime(self, my_date_time_str):
-        my_datetime_object=ciso8601.parse_datetime(my_date_time_str)
-        return my_datetime_object.strftime("%m/%d/%Y %H:%M:%S")
-
-
     def change_creation_date_on_macos(self, dirname, filename, new_creation_datetime):
         from subprocess import call
         full_path_file =dirname+ os.sep + filename
