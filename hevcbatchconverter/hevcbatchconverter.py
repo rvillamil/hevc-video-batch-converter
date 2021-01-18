@@ -8,7 +8,7 @@ import argparse
 from .__version__ import __version__
 
 # Import my libraries
-from .HEVCConverter import HEVCConverter
+from .HEVCConverter import HEVCConverter, pretty_print
 
 
 # Metadata
@@ -97,13 +97,13 @@ def main(args):
     """
     args = parse_args(args)
     setup_logging(args.loglevel)
-    _logger.debug("Begin ...")   
+    _logger.debug("Running tool!")   
     hevcconverter = HEVCConverter()
-    print ("Se van a convertir todos estos ficheros...\n")
+    print ("Getting XMP file list ...\n")
     hevcconverter.print_all_convertible_files_in_dir(args.path)    
-    input("Pulse Enter para continuar o Ctrl-C para abortar...")
+    input("Press Enter Key to continue or Ctrl-C to abort")
     hevcconverter.convert_dir(args.path)
-    _logger.info("Script ends here")
+    _logger.debug("Tool ends here!")
 
 
 def run():
