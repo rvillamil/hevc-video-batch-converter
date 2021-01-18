@@ -77,7 +77,7 @@ class HEVCConverter:
         full_path_imputfile = dirname + os.sep + input_filename
         full_path_outputfile = dirname + os.sep + self.OUTPUT_DIR_NAME + os.sep + output_filename
         pretty_print("Converting file '%s' to file '%s'" % (input_filename,output_filename))        
-        command = "ffmpeg -i '{full_path_imputfile}' -c:v copy -c:a copy -tag:v hvc1 '{full_path_outputfile}'".format(
+        command = "ffmpeg -i '{full_path_imputfile}' -c:v copy -crf 22 -c:a aac -b:a 192k -tag:v hvc1 '{full_path_outputfile}'".format(
             full_path_imputfile=full_path_imputfile, full_path_outputfile=full_path_outputfile)
         _logger.debug("Running comamnd '%s'" % command)
         call(command, shell=True)
