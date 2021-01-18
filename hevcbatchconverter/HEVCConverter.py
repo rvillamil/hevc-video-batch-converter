@@ -63,7 +63,7 @@ class HEVCConverter:
 
     def change_creation_date_on_macos(self, full_path_outputfile, new_creation_datetime):
         from subprocess import call
-        pretty_print("Setting creation date on file '%s'" % full_path_outputfile)
+        pretty_print("Setting creation date on file '%s' to '%s'" % (full_path_outputfile, new_creation_datetime))
         command = 'SetFile -d "' + new_creation_datetime + '" "' + full_path_outputfile + '"'
         _logger.debug("Running command '%s'" % command)
         call(command, shell=True)
