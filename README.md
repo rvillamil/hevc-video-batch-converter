@@ -4,6 +4,8 @@
 
 **hevcbatchconverter** es una herramienta **exclusivamente para MacOS** desarrollada en Python3, que se apoya en las librerías [**ffmpeg**](https://ffmpeg.org/) para convertir videos al formato HEVC. El formato HEVC es el que mejor se conporta con la aplicación Fotos en iCloud y soluciona ciertos problemas con la visualizacion de miniaturas de videos antiguos subidos a icloud.
 
+Para la conversion, se requiere del fichero XMP que genera la aplicacion 'Fotos' en el momento de exportar un fichero en su formato original. Para ello, seleccionamos la opción 'Exportar IPTC como XMP' al exportar los videos problemáticos.
+
 Ejemplo de uso:
 
 ```bash
