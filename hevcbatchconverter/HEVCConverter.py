@@ -5,6 +5,7 @@
 import os
 import glob
 import logging
+import pathlib
 
 # Metadata
 __author__ = "Rodrigo Villamil Pérez"
@@ -27,7 +28,7 @@ class HEVCConverter:
     """
     XMP_EXTENSION           = "xmp"
     OUTPUTFILE_EXTENSION    = "mp4"
-    OUTPUT_DIR              = "output"
+    OUTPUT_DIR_NAME         = "output"
     XML_NODE_REGEX          = r"photoshop:DateCreated>(.*)</photoshop:DateCreated"    
 
     def print_all_convertible_files_in_dir(self, dir):
@@ -74,7 +75,7 @@ class HEVCConverter:
         input_filename = filename_without_extension + '.' + input_file_extension
         output_filename = filename_without_extension + '.' + self.OUTPUTFILE_EXTENSION
         full_path_imputfile = dirname + os.sep + input_filename
-        full_path_outputfile = dirname + os.sep + self.OUTPUT_DIR + os.sep + output_filename
+        full_path_outputfile = dirname + os.sep + self.OUTPUT_DIR_NAME + os.sep + output_filename
         pretty_print("Converting file '%s' to file '%s'" % (input_filename,output_filename))        
         command = "ffmpeg -i '{full_path_imputfile}' -c:v libx265 -crf 0 -c:a aac -b:a 128k -tag:v hvc1 '{full_path_outputfile}'".format(
             full_path_imputfile=full_path_imputfile, full_path_outputfile=full_path_outputfile)
@@ -91,15 +92,20 @@ class HEVCConverter:
         _logger.debug("New Date time %s" % new_creation_datetime)        
         full_path_outputfile = self.ffmepg_convert_file(dir, filename_without_extension, input_file_extension)
         self.change_creation_date_on_macos( full_path_outputfile, new_creation_datetime)
+    
+    def create_output_dir (self, current_dir, output_dirname):
+        pretty_print ("Creating directory '%s' on current dir '%s'" % (self.OUTPUT_DIR_NAME,current_dir))        
+        pathlib.Path(current_dir + os.sep + output_dirname).mkdir(parents=True, exist_ok=True)
 
     def convert_dir(self, dir):
         os.chdir(dir)
+        self.create_output_dir ( dir, self.OUTPUT_DIR_NAME)
         for xmp_file in glob.glob("*." + self.XMP_EXTENSION):
             print("------------------------------------")
             filename_without_extension, extension = os.path.splitext(xmp_file)
             creation_date_str       = self.extract_creation_date_from_xmp_file(xmp_file)
             input_file_extension    = self.detect_input_file_extension(filename_without_extension)            
-            self.convert_file_from_dir(dir, 
+            self.convert_file_from_dir(dir,
                                        input_file_extension,
                                        filename_without_extension, 
                                        creation_date_str)
