@@ -2,7 +2,13 @@
 
 ## Introducción
 
-**hevcbatchconverter** es una herramienta desarrollada en Python3, que se apoya en las librerías [**ffmpeg**](https://ffmpeg.org/) para convertir videos al formato HEVC que es el que mejor se conporta con la aplicación Fotos en iCloud
+**hevcbatchconverter** es una herramienta **exclusivamente para MacOS** desarrollada en Python3, que se apoya en las librerías [**ffmpeg**](https://ffmpeg.org/) para convertir videos al formato HEVC. El formato HEVC es el que mejor se conporta con la aplicación Fotos en iCloud y soluciona ciertos problemas con la visualizacion de miniaturas de videos antiguos subidos a icloud.
+
+Ejemplo de uso:
+
+```bash
+$hevcbatchconverter -p /tmp/videofiles # Generar un directorio output con ficheros mp4 convertidos con ffmpeg
+```
 
 El 'Layout' del proyecto, las recomendaciones de empaquetado y su distribución, han sido implementadas apoyándonos en en la documentación obtenida de ["The Hitchhiker’s Guide to Packaging"](https://the-hitchhikers-guide-to-packaging.readthedocs.io/en/latest/index.html) y de ["kennethreitz.org
 Report abuse"](https://github.com/kennethreitz/samplemod)
@@ -17,6 +23,12 @@ En cualquier caso, para otros sistemas operativos, existen tutoriales análogos 
 
 ### Instalación de los requisitos mínimos
 
+- [ffmepg](https://ffmpeg.org/) como herramienta de conversion
+
+```bash
+$brew install ffmpeg
+```
+  
 - [python3](https://www.python.org/), como lenguaje de desarrollo
 
 ```bash
