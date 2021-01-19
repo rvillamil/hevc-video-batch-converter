@@ -87,11 +87,10 @@ class HEVCConverter:
         full_path_imputfile = dirname + os.sep + input_filename
         full_path_outputfile = dirname + os.sep + self.OUTPUT_DIR_NAME + os.sep + output_filename
         pretty_print("Converting file '%s' to file '%s'" % (input_filename,output_filename))         
-        command = "ffmpeg -i {full_path_imputfile} -c:v libx265 -preset medium -crf 22 -c:a aac -b:a 192k -vtag hvc1 -pix_fmt yuv420p -r 30000/1001 {full_path_outputfile}".format(full_path_imputfile=full_path_imputfile, full_path_outputfile=full_path_outputfile)
+        command = "ffmpeg -i '{full_path_imputfile}' -c:v libx265 -preset medium -crf 22 -c:a aac -b:a 192k -vtag hvc1 -pix_fmt yuv420p -r 30000/1001 '{full_path_outputfile}'".format(full_path_imputfile=full_path_imputfile, full_path_outputfile=full_path_outputfile)
         _logger.debug("Running comamnd '%s'" % command)
         call(command, shell=True)
-        return full_path_outputfile
-
+       
     def convert_file_from_dir(self, dirname, input_file_extension, filename_without_extension, creation_date_str):
         input_filename = filename_without_extension + "." + input_file_extension, 
         _logger.debug("Converting file '{input_file}' and setting '{creation_date_str}' as creation date".format(
@@ -103,7 +102,7 @@ class HEVCConverter:
         if os.path.exists (full_path_outputfile):
             pretty_warn ("WARN!! File '%s' already_exist! ...skipping .." % full_path_outputfile)
         else:
-            self.ffmepg_convert_file(dir, filename_without_extension, input_file_extension)
+            self.ffmepg_convert_file(dirname, filename_without_extension, input_file_extension)
             self.change_creation_date_on_macos( full_path_outputfile, new_creation_datetime)
     
     def create_output_dir (self, current_dir, output_dirname):
@@ -124,5 +123,6 @@ class HEVCConverter:
                                        input_file_extension,
                                        filename_without_extension, 
                                        creation_date_str)
+            total_procesed+=1
         print("------------------------------------")
         pretty_print ("End process!. '%d' files has been proceseed! " % total_procesed)
