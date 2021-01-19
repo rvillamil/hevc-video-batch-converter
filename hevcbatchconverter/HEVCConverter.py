@@ -76,10 +76,7 @@ class HEVCConverter:
         output_filename = filename_without_extension + '.' + self.OUTPUTFILE_EXTENSION
         full_path_imputfile = dirname + os.sep + input_filename
         full_path_outputfile = dirname + os.sep + self.OUTPUT_DIR_NAME + os.sep + output_filename
-        pretty_print("Converting file '%s' to file '%s'" % (input_filename,output_filename))        
-        #command = "ffmpeg -i '{full_path_imputfile}' -c:v libx265 -vtag hvc1 '{full_path_outputfile}'".format(full_path_imputfile=full_path_imputfile, full_path_outputfile=full_path_outputfile)
-        
-        #-profile:v high -level 4.2
+        pretty_print("Converting file '%s' to file '%s'" % (input_filename,output_filename))         
         command = "ffmpeg -i {full_path_imputfile} -c:v libx265 -preset medium -crf 22 -c:a aac -b:a 192k -vtag hvc1 -pix_fmt yuv420p -r 30000/1001 {full_path_outputfile}".format(full_path_imputfile=full_path_imputfile, full_path_outputfile=full_path_outputfile)
         _logger.debug("Running comamnd '%s'" % command)
         call(command, shell=True)
