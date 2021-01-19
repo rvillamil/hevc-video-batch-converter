@@ -77,8 +77,10 @@ class HEVCConverter:
         full_path_imputfile = dirname + os.sep + input_filename
         full_path_outputfile = dirname + os.sep + self.OUTPUT_DIR_NAME + os.sep + output_filename
         pretty_print("Converting file '%s' to file '%s'" % (input_filename,output_filename))        
-        command = "ffmpeg -i '{full_path_imputfile}' -c:v libx265 -crf 22 -c:a aac -b:a 196k -tag:v hvc1 '{full_path_outputfile}'".format(
-            full_path_imputfile=full_path_imputfile, full_path_outputfile=full_path_outputfile)
+        #command = "ffmpeg -i '{full_path_imputfile}' -c:v libx265 -vtag hvc1 '{full_path_outputfile}'".format(full_path_imputfile=full_path_imputfile, full_path_outputfile=full_path_outputfile)
+        
+        #-profile:v high -level 4.2
+        command = "ffmpeg -i {full_path_imputfile} -c:v libx265 -preset medium -crf 22 -c:a aac -b:a 192k -vtag hvc1 -pix_fmt yuv420p -r 30000/1001 {full_path_outputfile}".format(full_path_imputfile=full_path_imputfile, full_path_outputfile=full_path_outputfile)
         _logger.debug("Running comamnd '%s'" % command)
         call(command, shell=True)
         return full_path_outputfile
@@ -91,7 +93,7 @@ class HEVCConverter:
             creation_date_str)
         _logger.debug("New Date time %s" % new_creation_datetime)        
         full_path_outputfile = self.ffmepg_convert_file(dir, filename_without_extension, input_file_extension)
-        self.change_creation_date_on_macos( full_path_outputfile, new_creation_datetime)
+        #self.change_creation_date_on_macos( full_path_outputfile, new_creation_datetime)
     
     def create_output_dir (self, current_dir, output_dirname):
         pretty_print ("Creating directory '%s' on current dir '%s'" % (self.OUTPUT_DIR_NAME,current_dir))        
