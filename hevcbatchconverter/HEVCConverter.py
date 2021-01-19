@@ -90,7 +90,7 @@ class HEVCConverter:
             creation_date_str)
         _logger.debug("New Date time %s" % new_creation_datetime)        
         full_path_outputfile = self.ffmepg_convert_file(dir, filename_without_extension, input_file_extension)
-        #self.change_creation_date_on_macos( full_path_outputfile, new_creation_datetime)
+        self.change_creation_date_on_macos( full_path_outputfile, new_creation_datetime)
     
     def create_output_dir (self, current_dir, output_dirname):
         pretty_print ("Creating directory '%s' on current dir '%s'" % (self.OUTPUT_DIR_NAME,current_dir))        
