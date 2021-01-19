@@ -29,14 +29,20 @@ class HEVCConverter:
     XMP_EXTENSION           = "xmp"
     OUTPUTFILE_EXTENSION    = "mp4"
     OUTPUT_DIR_NAME         = "output"
-    XML_NODE_REGEX          = r"photoshop:DateCreated>(.*)</photoshop:DateCreated"    
+    XML_NODE_REGEX          = r"photoshop:DateCreated>(.*)</photoshop:DateCreated" 
+
+    _xmp_files_length = 0
 
     def print_all_convertible_files_in_dir(self, dir):
         os.chdir(dir)
-        for file in glob.glob("*." + self.XMP_EXTENSION):
+        xmp_files = glob.glob("*." + self.XMP_EXTENSION)
+        self._xmp_files_length= len(xmp_files)
+        for file in xmp_files:
             creation_date = self.extract_creation_date_from_xmp_file(file)
             pretty_print("File '{file}' created on '{creation_date}'".format(
                 file=file, creation_date=creation_date))
+        return self._xmp_files_length
+        
 
     def extract_creation_date_from_xmp_file(self, filepath):
         creation_date = None
@@ -82,14 +88,16 @@ class HEVCConverter:
         call(command, shell=True)
         return full_path_outputfile
 
-    def convert_file_from_dir(self, dir, input_file_extension, filename_without_extension, creation_date_str):
+    def convert_file_from_dir(self, dirname, input_file_extension, filename_without_extension, creation_date_str):
         input_filename = filename_without_extension + "." + input_file_extension, 
         _logger.debug("Converting file '{input_file}' and setting '{creation_date_str}' as creation date".format(
             input_file=input_filename, creation_date_str=creation_date_str))
         new_creation_datetime = self.datetime_str_to_datetime(
             creation_date_str)
         _logger.debug("New Date time %s" % new_creation_datetime)        
-        full_path_outputfile = self.ffmepg_convert_file(dir, filename_without_extension, input_file_extension)
+        full_path_outputfile = dirname + os.sep + self.OUTPUT_DIR_NAME + os.sep + filename_without_extension + '.' + self.OUTPUTFILE_EXTENSION
+        if 
+        self.ffmepg_convert_file(dir, filename_without_extension, input_file_extension)
         self.change_creation_date_on_macos( full_path_outputfile, new_creation_datetime)
     
     def create_output_dir (self, current_dir, output_dirname):
@@ -99,8 +107,10 @@ class HEVCConverter:
     def convert_dir(self, dir):
         os.chdir(dir)
         self.create_output_dir ( dir, self.OUTPUT_DIR_NAME)
+        total_procesed=1
         for xmp_file in glob.glob("*." + self.XMP_EXTENSION):
             print("------------------------------------")
+            pretty_print ("Processing '%d' of '%d'" % (total_procesed, self._xmp_files_length))
             filename_without_extension, extension = os.path.splitext(xmp_file)
             creation_date_str       = self.extract_creation_date_from_xmp_file(xmp_file)
             input_file_extension    = self.detect_input_file_extension(filename_without_extension)            
@@ -108,3 +118,4 @@ class HEVCConverter:
                                        input_file_extension,
                                        filename_without_extension, 
                                        creation_date_str)
+        print ("'%d' files has been proceseed! " % total_procesed)

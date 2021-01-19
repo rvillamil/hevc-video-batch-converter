@@ -99,9 +99,10 @@ def main(args):
     setup_logging(args.loglevel)
     _logger.debug("Running tool!")   
     hevcconverter = HEVCConverter()
-    print ("Getting XMP file list ...\n")
-    hevcconverter.print_all_convertible_files_in_dir(args.path)    
-    input("Press Enter Key to continue or Ctrl-C to abort")
+    print ("Getting XMP file list in directory '%s'\n" % (args.path))
+    xmp_files_length=hevcconverter.print_all_convertible_files_in_dir(args.path) 
+    print ("There are '%d' XMP files in directory '%s'\n" % (xmp_files_length, args.path))
+    input ("Press Enter Key to continue or Ctrl-C to abort")
     hevcconverter.convert_dir(args.path)
     _logger.debug("Tool ends here!")
 
