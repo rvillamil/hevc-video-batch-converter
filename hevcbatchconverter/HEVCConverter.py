@@ -20,8 +20,12 @@ _logger = logging.getLogger(__name__)
 
 
 def pretty_print(text):
+    # Monkey
     print("\U0001F412 {text}".format(text=text))
 
+def pretty_warn(text):
+    # Fire
+    print("\U0001F525 {text}".format(text=text))
 
 class HEVCConverter:
     """ API for HEVCConverter
@@ -39,7 +43,7 @@ class HEVCConverter:
         self._xmp_files_length= len(xmp_files)
         for file in xmp_files:
             creation_date = self.extract_creation_date_from_xmp_file(file)
-            pretty_print("File '{file}' created on '{creation_date}'".format(
+            pretty_print("Detected file '{file}'. Creation date is '{creation_date}'".format(
                 file=file, creation_date=creation_date))
         return self._xmp_files_length
         
@@ -96,9 +100,11 @@ class HEVCConverter:
             creation_date_str)
         _logger.debug("New Date time %s" % new_creation_datetime)        
         full_path_outputfile = dirname + os.sep + self.OUTPUT_DIR_NAME + os.sep + filename_without_extension + '.' + self.OUTPUTFILE_EXTENSION
-        if 
-        self.ffmepg_convert_file(dir, filename_without_extension, input_file_extension)
-        self.change_creation_date_on_macos( full_path_outputfile, new_creation_datetime)
+        if os.path.exists (full_path_outputfile):
+            pretty_warn ("WARN!! File '%s' already_exist! ...skipping .." % full_path_outputfile)
+        else:
+            self.ffmepg_convert_file(dir, filename_without_extension, input_file_extension)
+            self.change_creation_date_on_macos( full_path_outputfile, new_creation_datetime)
     
     def create_output_dir (self, current_dir, output_dirname):
         pretty_print ("Creating directory '%s' on current dir '%s'" % (self.OUTPUT_DIR_NAME,current_dir))        
@@ -106,7 +112,7 @@ class HEVCConverter:
 
     def convert_dir(self, dir):
         os.chdir(dir)
-        self.create_output_dir ( dir, self.OUTPUT_DIR_NAME)
+        self.create_output_dir ( dir, self.OUTPUT_DIR_NAME )
         total_procesed=1
         for xmp_file in glob.glob("*." + self.XMP_EXTENSION):
             print("------------------------------------")
@@ -118,4 +124,5 @@ class HEVCConverter:
                                        input_file_extension,
                                        filename_without_extension, 
                                        creation_date_str)
-        print ("'%d' files has been proceseed! " % total_procesed)
+        print("------------------------------------")
+        pretty_print ("End process!. '%d' files has been proceseed! " % total_procesed)
