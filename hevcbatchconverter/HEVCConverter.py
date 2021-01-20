@@ -125,4 +125,4 @@ class HEVCConverter:
                                        creation_date_str)
             total_procesed+=1
         print("------------------------------------")
-        pretty_print ("End process!. '%d' files has been proceseed! " % total_procesed)
+        pretty_print ("End process!. '%d' files has been proceseed! " %( total_procesed-1))
