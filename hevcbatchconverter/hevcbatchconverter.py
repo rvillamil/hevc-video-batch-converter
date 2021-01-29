@@ -8,7 +8,8 @@ import argparse
 from .__version__ import __version__
 
 # Import my libraries
-from .HEVCConverter import HEVCConverter, pretty_print
+from .HEVCConverter import HEVCConverter
+from .PrettyPrinter import pretty_print, pretty_error
 
 
 # Metadata
@@ -30,6 +31,8 @@ Besides console scripts, the header (i.e. until _logger...) of this file can
 also be used as template for Python modules.
 """
 _logger = logging.getLogger(__name__)
+
+OUTPUT_DIR_NAME = "output"
 
 def parse_args(args):
     """Parse command line parameters
@@ -63,11 +66,11 @@ def parse_args(args):
         action="store_const",
         const=logging.DEBUG,
     )
-    
+
     parser.add_argument(
         '-p',
         '--path',
-        help='Download path',        
+        help='Photo files path',
         required=True
     )
 
@@ -95,18 +98,35 @@ def main(args):
     Args:
       args ([str]): command line parameter list
     """
+    output_error = None
     args = parse_args(args)
     setup_logging(args.loglevel)
-    _logger.debug("Running tool!")   
-    hevcconverter = HEVCConverter()
-    pretty_print ("Getting XMP file list in directory '%s' ...\n" % (args.path))
-    xmp_files_length=hevcconverter.print_all_convertible_files_in_dir(args.path) 
-    print ("")
-    pretty_print ("There are '%d' XMP files in directory '%s'\n" % (xmp_files_length, args.path))
-    input ("Press Enter Key to continue or Ctrl-C to abort")
-    hevcconverter.convert_dir(args.path)
-    _logger.debug("Tool ends here!")
+    current_path = args.path
+    _logger.debug("Running tool on dir '%s'" % current_path)
 
+    hevcconverter = HEVCConverter(current_path)
+    pretty_print("Getting '%s' files list in directory '%s' ...\n" %
+                 (HEVCConverter.XMP_EXTENSION, current_path))
+    xmp_file_list = hevcconverter.all_xmp_files_on()
+    for xmp_file in xmp_file_list:
+        creation_date = hevcconverter.extract_creation_date_from_xmp_file(
+            xmp_file)
+        if creation_date:
+            pretty_print("Detected file '{xmp_file}' with creation date '{creation_date}'".format(
+                xmp_file=xmp_file, creation_date=creation_date))
+        else:            
+            output_error="There is a problem with '{xmp_file}'. Has not creation date!".format (xmp_file=xmp_file)
+            break 
+        
+    if not output_error:
+        input ("Press Enter Key to continue or Ctrl-C to abort")
+        pretty_print("Creating directory '%s' on current dir '%s'" % (OUTPUT_DIR_NAME, current_path))
+        hevcconverter.create_output_path (OUTPUT_DIR_NAME)
+        hevcconverter.run(xmp_file_list)
+
+    _logger.debug("Tool ends here with output error '%s'" % output_error)
+    sys.exit(pretty_error (output_error)) if output_error else sys.exit(0)
+    
 
 def run():
     """Entry point for console_scripts
@@ -116,5 +136,3 @@ def run():
 
 if __name__ == "__main__":
     run()
-
-
