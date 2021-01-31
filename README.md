@@ -195,12 +195,12 @@ Una configuración recomendada para Visual Studio Code podría establecerse en e
 ```json
 {
     "python.pythonPath": ".venv/bin/python",
-    "python.testing.pyTestArgs": [
-        "tests"
+    "python.testing.pytestArgs": [
+        "hevcbatchconverter"
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.nosetestsEnabled": false,
-    "python.testing.pyTestEnabled": true,
+    "python.testing.pytestEnabled": true,
     "python.linting.flake8Enabled": true,
     "python.linting.enabled": true,
     "python.formatting.provider": "autopep8"
