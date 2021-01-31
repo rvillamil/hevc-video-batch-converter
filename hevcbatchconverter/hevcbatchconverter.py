@@ -107,7 +107,7 @@ def main(args):
     hevcconverter = HEVCConverter(current_path)
     pretty_print("Getting '%s' files list in directory '%s' ...\n" %
                  (HEVCConverter.XMP_EXTENSION, current_path))
-    xmp_file_list = hevcconverter.all_xmp_files_on()
+    xmp_file_list = hevcconverter.all_xmp_files()
     for xmp_file in xmp_file_list:
         creation_date = hevcconverter.extract_creation_date_from_xmp_file(
             xmp_file)
@@ -118,11 +118,12 @@ def main(args):
             output_error="There is a problem with '{xmp_file}'. Has not creation date!".format (xmp_file=xmp_file)
             break 
         
-    if not output_error:
+    if len(xmp_file_list)>0:
         input ("Press Enter Key to continue or Ctrl-C to abort")
         pretty_print("Creating directory '%s' on current dir '%s'" % (OUTPUT_DIR_NAME, current_path))
-        hevcconverter.create_output_path (OUTPUT_DIR_NAME)
-        hevcconverter.run(xmp_file_list)
+        hevcconverter.create_output_path (OUTPUT_DIR_NAME)        
+        print("------------------------------------")
+        pretty_print("End process!. '%d' files has been proceseed! " % (hevcconverter.run(xmp_file_list)))
 
     _logger.debug("Tool ends here with output error '%s'" % output_error)
     sys.exit(pretty_error (output_error)) if output_error else sys.exit(0)
