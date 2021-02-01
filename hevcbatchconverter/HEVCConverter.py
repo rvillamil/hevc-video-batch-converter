@@ -27,7 +27,7 @@ class HEVCConverter:
 
     XML_NODE_REGEX = r"photoshop:DateCreated>(.*)</photoshop:DateCreated"
 
-    def HEVCConverter(self, current_path):
+    def __init__(self, current_path):
         self._xmp_files_length = 0
         self._current_path = current_path
 

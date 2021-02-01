@@ -34,6 +34,7 @@ _logger = logging.getLogger(__name__)
 
 OUTPUT_DIR_NAME = "output"
 
+
 def parse_args(args):
     """Parse command line parameters
 
@@ -114,20 +115,23 @@ def main(args):
         if creation_date:
             pretty_print("Detected file '{xmp_file}' with creation date '{creation_date}'".format(
                 xmp_file=xmp_file, creation_date=creation_date))
-        else:            
-            output_error="There is a problem with '{xmp_file}'. Has not creation date!".format (xmp_file=xmp_file)
-            break 
-        
-    if len(xmp_file_list)>0:
-        input ("Press Enter Key to continue or Ctrl-C to abort")
-        pretty_print("Creating directory '%s' on current dir '%s'" % (OUTPUT_DIR_NAME, current_path))
-        hevcconverter.create_output_path (OUTPUT_DIR_NAME)        
+        else:
+            output_error = "There is a problem with '{xmp_file}'. Has not creation date!".format(
+                xmp_file=xmp_file)
+            break
+
+    if len(xmp_file_list) > 0:
+        input("Press Enter Key to continue or Ctrl-C to abort")
+        pretty_print("Creating directory '%s' on current dir '%s'" %
+                     (OUTPUT_DIR_NAME, current_path))
+        hevcconverter.create_output_path(OUTPUT_DIR_NAME)
         print("------------------------------------")
-        pretty_print("End process!. '%d' files has been proceseed! " % (hevcconverter.run(xmp_file_list)))
+        pretty_print("End process!. '%d' files has been proceseed! " %
+                     (hevcconverter.run(xmp_file_list)))
 
     _logger.debug("Tool ends here with output error '%s'" % output_error)
-    sys.exit(pretty_error (output_error)) if output_error else sys.exit(0)
-    
+    sys.exit(pretty_error(output_error)) if output_error else sys.exit(0)
+
 
 def run():
     """Entry point for console_scripts
